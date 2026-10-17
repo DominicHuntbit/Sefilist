@@ -25,7 +25,7 @@ import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicColorScheme
 import com.materialkolor.score.Score
 
-val DefaultThemeColor = Color(0xFFED5564)
+val DefaultThemeColor = Color(0xFFF06292)
 
 @Composable
 fun MetrolistTheme(
@@ -36,7 +36,7 @@ fun MetrolistTheme(
 ) {
     val context = LocalContext.current
     // Determine if system dynamic colors should be used (Android S+ and default theme color)
-    val useSystemDynamicColor = (themeColor == DefaultThemeColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+    val useSystemDynamicColor = (themeColor == Color.Transparent && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 
     // Select the appropriate color scheme generation method
     val baseColorScheme = if (useSystemDynamicColor) {
@@ -45,7 +45,7 @@ fun MetrolistTheme(
     } else {
         // Use materialKolor only when a specific seed color is provided
         rememberDynamicColorScheme(
-            seedColor = themeColor, // themeColor is guaranteed non-default here
+            seedColor = if (themeColor == Color.Transparent) DefaultThemeColor else themeColor,
             isDark = darkTheme,
             specVersion = ColorSpec.SpecVersion.SPEC_2025,
             style = PaletteStyle.TonalSpot // Keep existing style
@@ -96,3 +96,4 @@ val ColorSaver = object : Saver<Color, Int> {
     override fun restore(value: Int): Color = Color(value)
     override fun SaverScope.save(value: Color): Int = value.toArgb()
 }
+
